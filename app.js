@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 
 // Neon PostgreSQL connection
 const pool = new Pool({
-  connectionString: 'YOUR_NEON_DATABASE_URL', // replace with your actual URL
+  connectionString: 'postgresql://bmidb_owner:npg_Kd39fWjvGCiX@ep-billowing-lake-a89rsu9d-pooler.eastus2.azure.neon.tech/bmidb?sslmode=requireYOUR_NEON_DATABASE_URL', // replace with your actual URL
   ssl: { rejectUnauthorized: false }
 });
 
@@ -54,12 +54,14 @@ function bmiCategoryFR(bmi) {
 }
 
 function send(res, response) {
+  console.log("Sending response:", response);
   res.set('Content-Type', 'text/plain');
   res.send(response);
 }
 
 // === USSD Logic ===
 app.post('/ussd', async (req, res) => {
+  console.log("USSD Request:", req.body);
   const { sessionId, serviceCode, phoneNumber, text } = req.body;
   const input = text.split("*");
   const level = input.length;
@@ -79,8 +81,7 @@ app.post('/ussd', async (req, res) => {
     session = await getSession(sessionId);
   }
 
-  // === ENGLISH ===
-  if (lang === "1") {
+  if (lang === "1") { // English
     if (level === 1) {
       response = `CON Please enter your weight in KGs:`;
     } else if (level === 2) {
@@ -122,11 +123,7 @@ app.post('/ussd', async (req, res) => {
           : `END Thank you for using BMI Checker.`;
       }
     }
-  }
-
-  // === (Other languages' logic skipped for brevity, but follow same update pattern) ===
-
-  else {
+  } else {
     response = `END Invalid input.`;
   }
 
