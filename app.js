@@ -18,10 +18,10 @@ async function getSession(sessionId) {
   return result.rows[0];
 }
 
-async function createSession(sessionId, phoneNumber, serviceCode) {
+async function createSession(sessionId, phoneNumber, serviceCode,language) {
   await pool.query(
     'INSERT INTO sessions (session_id, phone_number, service_code,language) VALUES ($1, $2, $3,$4)',
-    [sessionId, phoneNumber, serviceCode]
+    [sessionId, phoneNumber, serviceCode,language]
   );
 }
 
